@@ -1,0 +1,9 @@
+name: treasury_yield_curve_full_load
+slug: treasury_yield_curve_full_load
+description: |-
+  Pulls all historical treasury yield curve data and writes it to the database. Includes:
+  3 month, 6 month, 1 year, 2 year, 3 year, 5 year, 7 year, 10 year, 30 year & 30 year display
+  Dating back to 1990
+node:
+  entrypoint: treasury_yield_curve_full_load.js
+  nodeVersion: "18"
