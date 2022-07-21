@@ -1,0 +1,6 @@
+name: Pull portfolio price data
+slug: pull_portfolio_price_data
+description: Pulls token price data (in ETH) for BIT1 public tokens
+node:
+  entrypoint: pull_portfolio_price_data.js
+  nodeVersion: "18"

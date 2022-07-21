@@ -4,7 +4,7 @@ const parser = require('xml2json');
 
 const URL = "mongodb+srv://bkCryptoTeam:Vw01wuSjeNkyeZrj@cluster0.tmpq7.mongodb.net/?retryWrites=true&w=majority";
 const client = new MongoClient(URL);
-const db = client.db("macro_financial_data")
+const db = client.db("historical_price_data")
 const col = db.collection("treasury_yield_curves");
 
 // Data source:
