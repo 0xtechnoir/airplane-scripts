@@ -1,8 +1,9 @@
 const { MongoClient } = require("mongodb");
 const axios = require("axios");
 const parser = require('xml2json');
+require('dotenv').config()
 
-const URL = "mongodb+srv://bkCryptoTeam:Vw01wuSjeNkyeZrj@cluster0.tmpq7.mongodb.net/?retryWrites=true&w=majority";
+const URL = process.env.MONGODB_CONNECTION;;
 const client = new MongoClient(URL);
 const db = client.db("historical_price_data")
 const col = db.collection("treasury_yield_curves");
@@ -37,22 +38,27 @@ export default async function(params) {
 
             const mappedArr = entries.map((element, index, array) => {
                 let mappedElement = {}
+                console.dir(element.content["m:properties"])
                 for (const row in element.content["m:properties"]) {
                     if (row == 'd:NEW_DATE') {
-                        mappedElement[row.substring(2).toLowerCase()] = Date.parse(element.content["m:properties"][row]["$t"])
+                        // console.dir(element.content["m:properties"][row]["$t"])
+                        // console.dir(Date.parse(element.content["m:properties"][row]["$t"]))
+                        const str = element.content["m:properties"][row]["$t"]
+                        mappedElement["date"] = str.substring(0,str.indexOf('T'))
+                        mappedElement["timestamp"] = Date.parse(str)   
                     } else {
                         mappedElement[row.substring(2).toLowerCase()] = parseFloat(element.content["m:properties"][row]["$t"])
                     }
                 }
                 return mappedElement
             })
-            console.dir(mappedArr)
-            col.createIndex( { "new_date": 1 }, { unique: true } )
+            // console.dir(mappedArr)
+            col.createIndex( { "date": 1 }, { unique: true } )
             await col.insertMany(mappedArr);
             page++
         }
     } catch(err) {
-        console.error("An error occurred: " + e)
+        console.error("An error occurred: " + err)
     } finally {
         await client.close()
     } 

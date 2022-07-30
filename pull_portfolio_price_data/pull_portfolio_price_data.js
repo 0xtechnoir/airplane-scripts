@@ -1,7 +1,8 @@
 const { MongoClient } = require("mongodb");
 const CoinGecko = require('coingecko-api');
+require('dotenv').config()
 
-const URL = "mongodb+srv://bkCryptoTeam:Vw01wuSjeNkyeZrj@cluster0.tmpq7.mongodb.net/?retryWrites=true&w=majority";
+const URL = process.env.MONGODB_CONNECTION;
 const client = new MongoClient(URL);
 const CoinGeckoClient = new CoinGecko();
 let ethereumPriceData = []

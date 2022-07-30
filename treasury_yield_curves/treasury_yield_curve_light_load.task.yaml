@@ -1,0 +1,9 @@
+name: treasury_yield_curve_light_load
+slug: treasury_yield_curve_light_load
+description: Pulls data from the most recent month
+node:
+  entrypoint: treasury_yield_curve_light_load.js
+  nodeVersion: "18"
+  envVars:
+    MONGODB_CONNECTION:
+      config: MONGODB_CONNECTION

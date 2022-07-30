@@ -7,3 +7,7 @@ description: |-
 node:
   entrypoint: treasury_yield_curve_full_load.js
   nodeVersion: "18"
+  envVars:
+    MONGODB_CONNECTION:
+      config: MONGODB_CONNECTION
+    
