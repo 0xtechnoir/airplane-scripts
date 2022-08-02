@@ -79,7 +79,7 @@ export default async function(params) {
                 }
             } 
     
-            if (docsToWrite.length) {
+            if (docsToWrite) {
                 console.log(`docsToWrite: ${JSON.stringify(docsToWrite)}`)
                 await col.insertMany(docsToWrite);
             } else {
