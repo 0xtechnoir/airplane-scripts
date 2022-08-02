@@ -26,6 +26,7 @@ export default async function(params) {
     }
   } catch (e) {
       console.log(e)
+      throw e
   } finally{
     await client.close()
     console.log("Disconnected")

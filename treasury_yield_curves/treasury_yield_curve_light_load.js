@@ -21,37 +21,77 @@ export default async function(params) {
     
         const d = new Date()
         const year = d.getFullYear() // current year
-        const month = ("0" + (d.getMonth() + 1)).slice(-2) // current month
+        const month = ("0" + (d.getMonth() +1)).slice(-2) // current month
         const url = `https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_yield_curve&field_tdr_date_value_month=${year + month}`
         const xmlData = await getData(url);
         const jsonData = parser.toJson(xmlData, {object:true})
         const entries = jsonData.feed.entry
 
-        const mappedArr = entries.map((element) => {
-            let mappedElement = {}
-            for (const row in element.content["m:properties"]) {
-                if (row == 'd:NEW_DATE') {
-                    const str = element.content["m:properties"][row]["$t"]
-                    mappedElement["date"] = str.substring(0,str.indexOf('T'))
-                    mappedElement["timestamp"] = Date.parse(str)   
-                } else {
-                    mappedElement[row.substring(2).toLowerCase()] = parseFloat(element.content["m:properties"][row]["$t"])
+    
+        // console.dir(jsonData)
+        
+        // posible scenarios:
+            // It's the first of the month so there are no entries yet - entry will be undefined
+            // It's the second of the month so there will only be one entry and it will not be an array
+            // It's any other day of the month an the entries will be in an array
+
+        // if entries has a value
+        if(entries){
+
+            let docsToWrite
+            console.dir(entries)
+            if(Array.isArray(entries)) {
+                const mappedArr = entries.map((element) => {
+                    let mappedElement = {}
+                    for (const row in element.content["m:properties"]) {
+                        if (row == 'd:NEW_DATE') {
+                            const str = element.content["m:properties"][row]["$t"]
+                            mappedElement["date"] = str.substring(0,str.indexOf('T'))
+                            mappedElement["timestamp"] = Date.parse(str)   
+                        } else {
+                            mappedElement[row.substring(2).toLowerCase()] = parseFloat(element.content["m:properties"][row]["$t"])
+                        }
+                    }
+                    return mappedElement
+                })
+        
+                // from the current month create an array of items that are not in the database. 
+                docsToWrite = await writeDocs(mappedArr, col) 
+            } else {
+                // we have a single entry
+                console.log("only one entry")
+
+                let mappedEntry = {}
+                for (const row in entries.content["m:properties"]) {
+                    if (row == 'd:NEW_DATE') {
+                        const str = entries.content["m:properties"][row]["$t"]
+                        mappedEntry["date"] = str.substring(0,str.indexOf('T'))
+                        mappedEntry["timestamp"] = Date.parse(str)   
+                    } else {
+                        mappedEntry[row.substring(2).toLowerCase()] = parseFloat(entries.content["m:properties"][row]["$t"])
+                    }
                 }
+
+                const count = await col.countDocuments( { date: mappedEntry.date })
+                if(!count) {
+                    console.log(`Adding treasury yield data for: ${mappedEntry.date}`)
+                    docsToWrite = [ mappedEntry ]
+                }
+            } 
+    
+            if (docsToWrite.length) {
+                console.log(`docsToWrite: ${JSON.stringify(docsToWrite)}`)
+                await col.insertMany(docsToWrite);
+            } else {
+                console.log("No new documents to add")
             }
-            return mappedElement
-        })
-
-        // from the current month create an array of items that are not in the database. 
-        const docsToWrite = await writeDocs(mappedArr, col) 
-
-        if (docsToWrite.length) {
-            await col.insertMany(docsToWrite);
         } else {
-            console.log("No new documents to add")
+            console.log("There are no entries yet this month")
         }
         
     } catch(err) {
         console.error("An error occurred: " + err)
+        throw err
     } finally {
         await client.close()
         console.log("Process complete. Database connection closed.")
@@ -72,7 +112,7 @@ async function getData(_url) {
 
 async function writeDocs(mappedData, col) {   
   const docsToAdd = [];
-  for (const x of mappedData){
+  for (const x of mappedData) {
       const count = await col.countDocuments( { date: x.date })
       if(!count) {
           docsToAdd.push(x);
