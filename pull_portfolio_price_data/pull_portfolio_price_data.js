@@ -10,7 +10,7 @@ let ethereumPriceData = []
 export default async function(params) {
   try {
     const coinIds = [ "yield-guild-games", "alethea-artificial-liquid-intelligence-token",
-    "immutable-x", "rainbow-token-2", "superfarm", "matic-network", "sipher", "blackpool-token"]
+    "immutable-x", "rainbow-token-2", "superfarm", "matic-network", "sipher", "blackpool-token", "apecoin"]
   
     await client.connect()
     const db = client.db("historical_price_data")
@@ -47,24 +47,32 @@ async function createPosition(_coinName, _db, _startDate, _endDate) {
   const priceDataArray = data.data.prices
   const mappedPriceDataArray = priceDataArray.map((element, index, array) => {
 
-      let indexedValue
+    console.log(JSON.stringify(element))
+
+      let usdIndexedValue
+      let ethIndexedValue
       let currentValue = element[1]
-      let firstValue = array[0][1]
+      let firstUsdValue = array[0][1]
+      let firstEthValue = calculateEthPrice(array[0])
+      const eth_value = (_coinName == "ethereum") ? 1 : calculateEthPrice(element)
 
       // calculate indexed USD value 
       if (index < 1) {
-          indexedValue = 100
+          usdIndexedValue = 100
+          ethIndexedValue = 100
       } else {
-          indexedValue = 100 * ( currentValue / firstValue)
+          usdIndexedValue = 100 * ( currentValue / firstUsdValue)
+          ethIndexedValue = 100 * ( currentValue / firstEthValue)
       } 
 
-      const eth_value = (_coinName == "ethereum") ? 1 : calculateEthPrice(element)
+      
 
       return {
           "time" : element[0],
           "usd_value" : parseFloat(element[1]),
-          "indexed_usd_value": indexedValue,
-          "eth_value" : eth_value
+          "indexed_usd_value": usdIndexedValue,
+          "eth_value" : eth_value,
+          "indexed_eth_value": ethIndexedValue,
       }
   })
 

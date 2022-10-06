@@ -3,13 +3,10 @@ const axios = require("axios");
 const parser = require('xml2json');
 require('dotenv').config()
 
-const URL = process.env.MONGODB_CONNECTION;;
+const URL = process.env.MONGODB_CONNECTION;
 const client = new MongoClient(URL);
 const db = client.db("historical_price_data")
 const col = db.collection("treasury_yield_curves");
-
-// Data source:
-// https://home.treasury.gov/treasury-daily-interest-rate-xml-feed
 
 export default async function(params) {
   
@@ -41,8 +38,6 @@ export default async function(params) {
                 console.dir(element.content["m:properties"])
                 for (const row in element.content["m:properties"]) {
                     if (row == 'd:NEW_DATE') {
-                        // console.dir(element.content["m:properties"][row]["$t"])
-                        // console.dir(Date.parse(element.content["m:properties"][row]["$t"]))
                         const str = element.content["m:properties"][row]["$t"]
                         mappedElement["date"] = str.substring(0,str.indexOf('T'))
                         mappedElement["timestamp"] = Date.parse(str)   
@@ -52,7 +47,6 @@ export default async function(params) {
                 }
                 return mappedElement
             })
-            // console.dir(mappedArr)
             col.createIndex( { "date": 1 }, { unique: true } )
             await col.insertMany(mappedArr);
             page++

@@ -1,19 +1,14 @@
 const { MongoClient } = require("mongodb");
-const CoinGecko = require('coingecko-api');
 const axios = require("axios");
-const parser = require('xml2json');
 require('dotenv').config()
 
-const CoinGeckoClient = new CoinGecko();
 const URL = process.env.MONGODB_CONNECTION;
 const cryptoRankAPIKey = process.env.CRYPTORANK_API_KEY;
 const client = new MongoClient(URL);
-const db = client.db("historical_price_data")
-const col = db.collection("top_20_projects_by_market_cap");
 
 export default async function() {
   
-  col.createIndex( { "coin_id": 1 }, { unique: true } )
+  const db = client.db("historical_price_data")
   
   try {
     
@@ -39,7 +34,7 @@ export default async function() {
           const percChange6m = data[i].values.USD.percentChange6m > 0 ? `${data[i].values.USD.percentChange6m.toFixed(2)}%` : `(${Math.abs(data[i].values.USD.percentChange6m.toFixed(2))}%)`
   
           const document = {
-              "coin_id": i,
+              "coin_id": data[i].id,
               "token": data[i].symbol.toUpperCase(),
               "rank": data[i].rank,
               "price": Intl.NumberFormat().format(data[i].values.USD.price),
@@ -57,10 +52,13 @@ export default async function() {
               "pc_circulating": maxSupply ? ((data[i].circulatingSupply / data[i].maxSupply) * 100).toFixed(0) : '100'
           }
           console.dir(document)
-          const query = { rank: data[i].rank }
-          const update = { $set: document}
+          const query = { coin_id: data[i].id }
+          const update = document
           const options = { upsert: true }
-          await col.updateOne(query, update, options);  
+          const col = db.collection("top_20_projects_by_market_cap");
+          col.createIndex( { "coin_id": 1 }, { unique: true } )
+          const result = await col.replaceOne(query, update, options);  
+          console.log(`Result: ${JSON.stringify(result)}`)  
         }
   } catch (err) {
       console.log("Caught Error" + err)
@@ -68,6 +66,7 @@ export default async function() {
   } finally {
     console.log("closing connection")
     await client.close()
+    console.log("Disconnected")
   }
 }
 

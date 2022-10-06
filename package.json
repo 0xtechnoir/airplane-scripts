@@ -9,9 +9,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "airplane": "^0.2.7",
     "axios": "^0.27.2",
     "coingecko-api": "^1.0.10",
     "dotenv": "^16.0.1",
+    "graphql-request": "^5.0.0",
     "mongodb": "^4.8.0",
     "xml2json": "^0.12.0"
   }

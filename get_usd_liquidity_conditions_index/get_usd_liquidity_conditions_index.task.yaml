@@ -1,0 +1,14 @@
+name: get_usd_liquidity_conditions_index
+slug: get_usd_liquidity_conditions_index
+description: |-
+  USD Liquidity Conditions Index = [The Fed’s Balance Sheet] — [NY Fed Total Amount of Accepted Reverse Repo Bids] — [US Treasury General Account Balance Held at NY Fed]
+  
+  ( FRED:WALCL - ( FRED:WDTGAL + FRED:RRPONTSYD * 1000 ) )
+  
+  Source: https://fred.stlouisfed.org/docs/api/fred/series_observations.html
+node:
+  entrypoint: get_usd_liquidity_conditions_index.js
+  nodeVersion: "18"
+  envVars:
+    MONGODB_CONNECTION:
+      config: MONGODB_CONNECTION

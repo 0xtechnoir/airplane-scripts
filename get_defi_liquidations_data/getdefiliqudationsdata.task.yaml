@@ -1,0 +1,6 @@
+name: getDefiLiqudationsData
+slug: getdefiliqudationsdata
+description: Retrieves open positions on major DeFi lending / CDP protocols, showing how much collateral asset will be liquidated at what specific price across the market.
+node:
+  entrypoint: getdefiliqudationsdata.js
+  nodeVersion: "18"

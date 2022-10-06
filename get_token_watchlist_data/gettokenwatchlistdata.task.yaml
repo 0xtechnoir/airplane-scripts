@@ -1,0 +1,11 @@
+name: getTokenWatchlistData
+slug: gettokenwatchlistdata
+description: Calls out to Coingecko and retrieves specific coin metrics
+node:
+  entrypoint: gettokenwatchlistdata.js
+  nodeVersion: "18"
+  envVars:
+    MONGODB_CONNECTION:
+      config: MONGODB_CONNECTION
+    CRYPTORANK_API_KEY:
+      config: CRYPTORANK_API_KEY
