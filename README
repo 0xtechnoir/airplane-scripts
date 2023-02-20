@@ -1,0 +1,8 @@
+Run a script once:
+airplane dev get_historical_token_watchlist_data/get_historical_token_watchlist_data.task.yaml 
+
+Deploy a new script to production:
+airplane deploy get_historical_token_watchlist_data/get_historical_token_watchlist_data.task.yaml 
+
+To set environmental variables on the Airplane cloud platform see these instructions:
+https://docs.airplane.dev/platform/configs#project-wide-environment-variables

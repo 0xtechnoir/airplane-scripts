@@ -37,7 +37,7 @@ export default async function() {
               "coin_id": data[i].id,
               "token": data[i].symbol.toUpperCase(),
               "rank": data[i].rank,
-              "price": Intl.NumberFormat().format(data[i].values.USD.price),
+              "price": data[i].values.USD.price,
               "price_change_pc_24hr": percChange24h,
               "price_change_pc_7d": percChange7d,
               "price_change_pc_30d": percChange30d,
@@ -52,11 +52,11 @@ export default async function() {
               "pc_circulating": maxSupply ? ((data[i].circulatingSupply / data[i].maxSupply) * 100).toFixed(0) : '100'
           }
           console.dir(document)
-          const query = { coin_id: data[i].id }
+          const query = { rank: data[i].rank }
           const update = document
           const options = { upsert: true }
           const col = db.collection("top_20_projects_by_market_cap");
-          col.createIndex( { "coin_id": 1 }, { unique: true } )
+          col.createIndex( { "rank": 1 }, { unique: true } )
           const result = await col.replaceOne(query, update, options);  
           console.log(`Result: ${JSON.stringify(result)}`)  
         }

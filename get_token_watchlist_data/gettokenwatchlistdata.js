@@ -50,14 +50,13 @@ export default async function() {
         "max_supply": maxSupply ? abbreviate(parseInt(data[i].maxSupply), 2, false, false) : '-',
         "pc_circulating": maxSupply ? ((data[i].circulatingSupply / data[i].maxSupply) * 100).toFixed(0) : '100'
       }
-      console.dir(document)
+
       const query = { coin_id: data[i].id }
       const update = document
       const options = { upsert: true }
       const col = db.collection("token_watchlist");
       col.createIndex( { "coin_id": 1 }, { unique: true } )
       const result = await col.replaceOne(query, update, options);  
-      console.log(`Result: ${JSON.stringify(result)}`)
     }
   } catch (err) {
     console.log("Caught Error: " + err)
