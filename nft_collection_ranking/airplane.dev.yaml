@@ -1,0 +1,4 @@
+resources: []
+configVars:
+    MONGODB_CONNECTION: mongodb+srv://bkCryptoTeam:S2s7qPgu3LsuoA83@cluster0.tmpq7.mongodb.net/?retryWrites=true&w=majority"
+envVars: {}

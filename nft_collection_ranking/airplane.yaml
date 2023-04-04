@@ -1,0 +1,7 @@
+python:
+  version: "3.10"
+  envVars:
+      MONGODB_CONNECTION:
+        config: MONGODB_CONNECTION
+      NFT_GO_API_KEY:
+        config: NFT_GO_API_KEY

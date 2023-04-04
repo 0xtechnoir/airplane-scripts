@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "airplane": "^0.2.7",
+    "api": "^5.0.8",
     "axios": "^0.27.2",
     "coingecko-api": "^1.0.10",
     "dotenv": "^16.0.1",
