@@ -8,10 +8,7 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-@airplane.task(
-    # slug="nft_ranking_data_fetch_airplane",
-    # name="nft_ranking_data_fetch_airplane",
-)
+@airplane.task()
 def main():
     MONGODB_CONNECTION = os.getenv('MONGODB_CONNECTION')
 
@@ -32,8 +29,7 @@ def main():
     response = requests.get(url, headers=headers)
     response = response.json()
     collections = response['collections']
-
-    pretty_json = json.dumps(collections[0], indent=4)
+    pprint(collections[0])
 
     docs = []
     for i, collection in enumerate(collections):
@@ -51,10 +47,11 @@ def main():
             "market_cap_usd": collection["market_cap_usd"], 
             "floor_price_eth": collection["floor_price_eth"], 
             "floor_price_usd": collection["floor_price_usd"],
-            "holder_num": collection["holder_num"], 
             "floor_change_24hr": metrics['floor_price_change_percentage']['24h'],
             "floor_change_7d": metrics['floor_price_change_percentage']['7d'],
-            "floor_change_30d": metrics['floor_price_change_percentage']['30d'] 
+            "floor_change_30d": metrics['floor_price_change_percentage']['30d'], 
+            "total_supply": metrics['total_supply'],
+            "holder_num": collection["holder_num"],
         }
 
         docs.append(doc)
