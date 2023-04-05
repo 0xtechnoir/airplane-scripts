@@ -1,8 +1,64 @@
+## Creating a new task locally
+
+```
+airplane tasks init
+```
+https://docs.airplane.dev/tasks/python
+
+## Running scripts locally and deploying to production (New Way)
+
+Running locally (Will open up a UI in the browser, environmental/Config variables are defined in the UI )
+```
+airplane dev get_top_web3_games_airplane.py
+```
+
+
+Promting to production, Environmental/config variable are defined in airplane.yaml
+From within the directory containing the task
+```
+airplane deploy --yes 
+```
+
+## Running scripts locally and deploying to production (Old Way)
+All variables (local and prod) defined in a singe yaml file.
+
 Run a script once:
+```
 airplane dev get_historical_token_watchlist_data/get_historical_token_watchlist_data.task.yaml 
+```
 
 Deploy a new script to production:
+```
 airplane deploy get_historical_token_watchlist_data/get_historical_token_watchlist_data.task.yaml 
+```
 
 To set environmental variables on the Airplane cloud platform see these instructions:
 https://docs.airplane.dev/platform/configs#project-wide-environment-variables
+
+
+
+## Generating dependancy file (Python)
+
+To generate the requirements.txt file run the following command inside the tasks directory:
+```
+pipreqs .
+```
+
+## Creating a Selenium Web Scraper
+
+https://docs.airplane.dev/templates/python-selenium-example
+Simple task that demonstrates how to load a website in Python using [selenium](https://www.selenium.dev/) and Firefox.
+
+### Next steps
+
+- Navigate to the python_selenium_example directory: `cd python_selenium_example`
+- Make sure you have `selenium` installed. An example `requirements.txt` is provided with the necessary `selenium` dependency and can be installed via `pip install -r requirements.txt`.
+- Run your task locally: `airplane dev`
+
+  > You need to have Firefox and `geckodriver` installed to run locally.
+
+  - To install Firefox, visit [this page](https://www.mozilla.org/firefox/).
+  - To install `geckodriver`, download the package for your system [here](https://github.com/mozilla/geckodriver/releases) and place the binary in your `$PATH`.
+
+- Make any changes to the `selenium_example.py` script
+- Deploy your task: `airplane deploy --yes`
