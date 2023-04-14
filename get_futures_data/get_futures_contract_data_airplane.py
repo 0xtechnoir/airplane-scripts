@@ -10,15 +10,16 @@ load_dotenv()
     slug="get_futures_contract_data",
     name="get_futures_contract_data",
 )
-def get_futures_contract_data():
+def get_futures_contract_data(days: int):
+    print(f"Running get_futures_contract_data task. Days: {days}")
     btc_instruments = get_instruments("BTC")
-    aggregated_btc_open_interest = get_historical_instrument_data(btc_instruments)
+    aggregated_btc_open_interest = get_historical_instrument_data(btc_instruments, days)
     btc_result = []
     for timestamp, exchanges_agg in aggregated_btc_open_interest.items():
         btc_result.append({"timestamp": timestamp, "exchanges_agg": exchanges_agg})
 
     eth_instruments = get_instruments("ETH")
-    aggregated_eth_open_interest = get_historical_instrument_data(eth_instruments)
+    aggregated_eth_open_interest = get_historical_instrument_data(eth_instruments, days)
     eth_result = []
     for timestamp, exchanges_agg in aggregated_eth_open_interest.items():
         eth_result.append({"timestamp": timestamp, "exchanges_agg": exchanges_agg})
@@ -38,9 +39,19 @@ def get_futures_contract_data():
         btc_collection = db.btc_aggregated_open_interest
         btc_collection.create_index([("timestamp", pymongo.ASCENDING)], unique=True)
 
-        # Insert the data into the collections
-        eth_collection.insert_many(eth_result)
-        btc_collection.insert_many(btc_result)
+        for eth_doc in eth_result:
+            eth_collection.update_one(
+                {"timestamp": eth_doc["timestamp"]},
+                {"$setOnInsert": eth_doc},
+                upsert=True
+            )
+
+        for btc_doc in btc_result:
+            btc_collection.update_one(
+                {"timestamp": btc_doc["timestamp"]},
+                {"$setOnInsert": btc_doc},
+                upsert=True
+            )
             
     except Exception as e:
         print(f"Error: {e}")
@@ -67,7 +78,7 @@ def get_instruments(coin):
 
     return market_instruments
 
-def get_historical_instrument_data(instruments):
+def get_historical_instrument_data(instruments, days):
     aggregated_open_interest = {}
     base_url = "https://data-api.cryptocompare.com/futures/v1/historical/open-interest/days"
 
@@ -77,7 +88,7 @@ def get_historical_instrument_data(instruments):
     # Pull historical data for each instrument for the last 2000 days
         for instrument in instruments:
             print("Fetching data for instrument: ", instrument)
-            url = f"{base_url}?market={market}&instrument={instrument}&limit=2000"
+            url = f"{base_url}?market={market}&instrument={instrument}&limit={days}"
             response = requests.get(url)
 
             if response.status_code == 200:
