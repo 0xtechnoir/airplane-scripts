@@ -4,3 +4,4 @@ node_modules/
 */__pycache__/
 */.airplane/
 */geckodriver.log
+.airplane/
