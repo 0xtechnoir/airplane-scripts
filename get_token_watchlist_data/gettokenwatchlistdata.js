@@ -29,24 +29,40 @@ UOS   7847
 DAR   170227
 SWEAT 176027
 RAINI 50207
+PET   157367
+WRLD  27705
+DUST  174085
+GUILD 171188
+ALU   7314
+GQ    173270
+NAKA  101315
+EJS   169622
+REVO  30524
+HIGH  169597
+WEMIX 26764
 */
 
   try {
     
     await client.connect()
     const db = client.db("historical_price_data")
-    coinIDs = '121,21407,29958,23865,26691,7481,112,105,170039,178125,181246,173608,169601,172730,7847,170227,176027,50207'
+    coinIDs = '121,21407,29958,23865,26691,7481,112,105,170039,178125,181246,173608,169601,172730,7847,170227,176027,50207,157367,27705,174085,171188,7314,173270,101315,169622,30524,169597,26764'
     // const response = await axios.get(`https://api.cryptorank.io/v1/currencies?api_key=${cryptoRankAPIKey}&symbols=${tokens}`)
     const response = await axios.get(`https://api.cryptorank.io/v1/currencies?api_key=${cryptoRankAPIKey}&ids=${coinIDs}`)
   
     const data = response.data.data  
     for(let i=0 ; i< data.length; i++) {
+
+      console.log(data[i])
       
       let fdv, maxSupply
       if (data[i].maxSupply) {
         // the token has a capped limit
         fdv = data[i].values.USD.price * data[i].maxSupply
         maxSupply = data[i].maxSupply
+      } else if (data[i].totalSupply) {
+        // if maxSupply is missing use total supply to calc fdv
+        fdv = data[i].values.USD.price * data[i].totalSupply
       }
       
       const percChange24h = data[i].values.USD.percentChange24h >= 0 ? `${data[i].values.USD.percentChange24h.toFixed(2)}%` : `(${Math.abs(data[i].values.USD.percentChange24h.toFixed(2))}%)`

@@ -11,6 +11,7 @@ export default async function(params) {
   try {
 
     const coinIds = [ 
+      // BIT1
       "yield-guild-games", 
       "alethea-artificial-liquid-intelligence-token",
       "immutable-x", 
@@ -19,8 +20,11 @@ export default async function(params) {
       "matic-network", 
       "sipher", 
       "blackpool-token", 
+      // BIT2 
+      "karate-combat",
+      // Other
       "defipulse-index", 
-      "bitcoin" 
+      "bitcoin",
     ]
 
     await client.connect()
