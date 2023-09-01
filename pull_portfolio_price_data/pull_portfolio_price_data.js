@@ -19,7 +19,8 @@ export default async function(params) {
       "superfarm", 
       "matic-network", 
       "sipher", 
-      "blackpool-token", 
+      "blackpool-token",
+      "vcore",
       // BIT2 
       "karate-combat",
       // Other
