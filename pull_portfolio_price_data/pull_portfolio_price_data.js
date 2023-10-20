@@ -26,6 +26,15 @@ export default async function(params) {
       // Other
       "defipulse-index", 
       "bitcoin",
+      // temp
+      "the-sandbox", 
+      "axie-infinity", 
+      "apecoin", 
+      "gala", 
+      "illuvium", 
+      "stepn", 
+      "magic", 
+      "wax",
     ]
 
     await client.connect()

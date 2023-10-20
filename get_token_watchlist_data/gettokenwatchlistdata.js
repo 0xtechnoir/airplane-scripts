@@ -40,13 +40,14 @@ EJS   169622
 REVO  30524
 HIGH  169597
 WEMIX 26764
+CROWN 183271
 */
 
   try {
     
     await client.connect()
     const db = client.db("historical_price_data")
-    coinIDs = '121,21407,29958,23865,26691,7481,112,105,170039,178125,181246,173608,169601,172730,7847,170227,176027,50207,157367,27705,174085,171188,7314,173270,101315,169622,30524,169597,26764'
+    coinIDs = '121,21407,29958,23865,26691,7481,112,105,170039,178125,181246,173608,169601,172730,7847,170227,176027,50207,157367,27705,174085,171188,7314,173270,101315,169622,30524,169597,26764,183271'
     // const response = await axios.get(`https://api.cryptorank.io/v1/currencies?api_key=${cryptoRankAPIKey}&symbols=${tokens}`)
     const response = await axios.get(`https://api.cryptorank.io/v1/currencies?api_key=${cryptoRankAPIKey}&ids=${coinIDs}`)
   
@@ -64,12 +65,22 @@ WEMIX 26764
         // if maxSupply is missing use total supply to calc fdv
         fdv = data[i].values.USD.price * data[i].totalSupply
       }
+
+      function getFormattedPercentChange(dataItem, property) {
+        const value = dataItem?.values?.USD?.[property] ?? null;
+        return value === null 
+            ? null 
+            : (value >= 0 
+                ? `${value.toFixed(2)}%` 
+                : `(${Math.abs(value.toFixed(2))}%)`);
+    }
+    
+      const percChange24h = getFormattedPercentChange(data[i], 'percentChange24h');
+      const percChange7d = getFormattedPercentChange(data[i], 'percentChange7d');
+      const percChange30d = getFormattedPercentChange(data[i], 'percentChange30d');
+      const percChange3m = getFormattedPercentChange(data[i], 'percentChange3m');
+      const percChange6m = getFormattedPercentChange(data[i], 'percentChange6m');
       
-      const percChange24h = data[i].values.USD.percentChange24h >= 0 ? `${data[i].values.USD.percentChange24h.toFixed(2)}%` : `(${Math.abs(data[i].values.USD.percentChange24h.toFixed(2))}%)`
-      const percChange7d = data[i].values.USD.percentChange7d >= 0 ? `${data[i].values.USD.percentChange7d.toFixed(2)}%` : `(${Math.abs(data[i].values.USD.percentChange7d.toFixed(2))}%)`
-      const percChange30d = data[i].values.USD.percentChange30d >= 0 ? `${data[i].values.USD.percentChange30d.toFixed(2)}%` : `(${Math.abs(data[i].values.USD.percentChange30d.toFixed(2))}%)`
-      const percChange3m = data[i].values.USD.percentChange3m >= 0 ? `${data[i].values.USD.percentChange3m.toFixed(2)}%` : `(${Math.abs(data[i].values.USD.percentChange3m.toFixed(2))}%)`
-      const percChange6m = data[i].values.USD.percentChange6m >= 0 ? `${data[i].values.USD.percentChange6m.toFixed(2)}%` : `(${Math.abs(data[i].values.USD.percentChange6m.toFixed(2))}%)`
       const price = data[i].values.USD.price
       const vol24h = data[i].values.USD.volume24h
       const mc = data[i].values.USD.marketCap
