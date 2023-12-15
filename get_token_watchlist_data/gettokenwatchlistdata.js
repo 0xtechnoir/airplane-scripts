@@ -41,13 +41,18 @@ REVO  30524
 HIGH  169597
 WEMIX 26764
 CROWN 183271
+GFAL 179147
+BEAM 186254
+SHRAP 174652
+MYRIA 181281
+
 */
 
   try {
     
     await client.connect()
     const db = client.db("historical_price_data")
-    coinIDs = '121,21407,29958,23865,26691,7481,112,105,170039,178125,181246,173608,169601,172730,7847,170227,176027,50207,157367,27705,174085,171188,7314,173270,101315,169622,30524,169597,26764,183271'
+    coinIDs = '121,21407,29958,23865,26691,7481,112,105,170039,178125,181246,173608,169601,172730,7847,170227,176027,50207,157367,27705,174085,171188,7314,173270,101315,169622,30524,169597,26764,183271,179147,186254,174652,181281'
     // const response = await axios.get(`https://api.cryptorank.io/v1/currencies?api_key=${cryptoRankAPIKey}&symbols=${tokens}`)
     const response = await axios.get(`https://api.cryptorank.io/v1/currencies?api_key=${cryptoRankAPIKey}&ids=${coinIDs}`)
   

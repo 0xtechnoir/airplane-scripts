@@ -42,6 +42,8 @@ https://docs.airplane.dev/platform/configs#project-wide-environment-variables
 To generate the requirements.txt file run the following command inside the tasks directory:
 ```
 pipreqs .
+// install requirements.txt
+pip install -r requirements.txt
 ```
 
 ## Creating a Selenium Web Scraper
@@ -65,3 +67,6 @@ Simple task that demonstrates how to load a website in Python using [selenium](h
 
 ## Coingecko ID"s
 https://api.coingecko.com/api/v3/coins/list
+
+## How to get the coinId of a token
+https://api.cryptorank.io/v1/currencies?api_key=[apikey]&symbols=[symbol]

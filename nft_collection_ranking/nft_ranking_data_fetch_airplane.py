@@ -29,16 +29,19 @@ def main():
     response = requests.get(url, headers=headers)
     response = response.json()
     collections = response['collections']
-    pprint(collections[0])
+    # pprint(collections[0])
 
     docs = []
     for i, collection in enumerate(collections):
 
         contract = collection["contracts"][0]
+        # pprint(contract)
         # Get additional data for each collection based on contract address
         collection_metrics_url = "https://data-api.nftgo.io/eth/v1/collection/" + contract + "/metrics"
         metrics = requests.get(collection_metrics_url, headers=headers)
         metrics = metrics.json()
+        pprint("+++++++++++++++++++++++++")
+        pprint(metrics)
 
         doc = {
             "Rank": i + 1,

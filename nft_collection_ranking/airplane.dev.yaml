@@ -1,5 +1,7 @@
+# This file contains configuration for local resources, config variables, and environment variables.
+# For more information, see the docs on the dev config file: https://docs.airplane.dev/dev-lifecycle/dev-config-file
 resources: []
 configVars:
-    MONGODB_CONNECTION: mongodb+srv://bkCryptoTeam:S2s7qPgu3LsuoA83@cluster0.tmpq7.mongodb.net/?retryWrites=true&w=majority
+    MONGODB_CONNECTION: mongodb+srv://bkCryptoTeam:SRKZRxmz34MHskWG@cluster0.tmpq7.mongodb.net/?retryWrites=true&w=majority
     NFT_GO_API_KEY: 3c27ac7e-c126-4f25-9238-4c289cb53558
 envVars: {}
